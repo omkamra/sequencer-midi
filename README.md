@@ -63,7 +63,7 @@ embedded into patterns as Clojure strings.
 
 The language provides the following building blocks:
 
-| Example input | Resulting parse expression | Effect |
+| Example input | Resulting pattern expression | Effect |
 | ------| -------------------------- | ------ |
 | `p4`  | `[:program 4]` | set program of current channel to 4 |
 | `m60` | `[:note 60]` | play MIDI note 60 |
@@ -80,7 +80,7 @@ The language provides the following building blocks:
 
 These building blocks can be aggregated into larger units using the following syntax:
 
-| Example input | Resulting parse expression | Effect |
+| Example input | Resulting pattern expression | Effect |
 | ------| -------------------------- | ------ |
 | `(0 2 4)` | `[:seq [:degree 0] [:degree 2] [:degree 4]]` | play the three degrees in succession |
 | `{0 2 4}` | `[:mix1 [:degree 0] [:degree 2] [:degree 4]]` | play the three degrees in parallel, advance the pattern by the length of the first one |
@@ -88,7 +88,7 @@ These building blocks can be aggregated into larger units using the following sy
 Both simple building blocks and aggregates can be ornamented with
 various binding modifiers:
 
-| Example input | Resulting parse expression | Effect |
+| Example input | Resulting pattern expression | Effect |
 | ------| -------------------------- | ------ |
 | `2c5` | `[:bind {:channel 5} [:degree 2]]` | play degree 2 on MIDI channel 5 |
 | `{3 4}~2` | `[:bind {:dur 2} [:mix1 [:degree 3] [:degree 4]]]` | play degrees 3 and 4 simultaneously with duration 2 |
