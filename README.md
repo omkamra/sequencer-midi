@@ -19,8 +19,8 @@ It provides the following features:
 - MIDI-specific binding keys: `:channel`, `:root`, `:scale`, `:vel`,
   `:oct`, `:mode`, `:semi`, `:dur`
 
-These elements make it possible to encode musical phrases as pattern
-expressions:
+These elements make it possible to encode musical phrases as [pattern
+expressions](https://github.com/omkamra/sequencer#pattern-expressions):
 
 ```clojure
 [:bind {:root :f#3
