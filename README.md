@@ -71,7 +71,7 @@ The language provides the following building blocks:
 | `c#5` | `[:note 61]` | play MIDI note 61 |
 | `b-4` | `[:note 59]` | play MIDI note 59 |
 | `3`   | `[:degree 3]` | play 3rd degree of current scale |
-| `-5`  | `[:degree -5]` | play 2nd degree of current scale one octave lower (assuming a 7 note scale) |
+| `-5`  | `[:degree -5]` | play 2nd degree of current scale one octave lower (assuming a scale of 7 notes) |
 | `,`   | `[:wait 1]` | wait 1 step |
 | `,4`  | `[:wait 4]` | wait 4 steps |
 | `,1/2` | `[:wait 1/2]` | wait half step |
@@ -104,7 +104,7 @@ various binding modifiers:
 | `2@3` | `[:bind {:root [:degree->key 3]} [:degree 2]]]` | play the 2nd degree of the scale starting at the 3rd degree of the current scale |
 
 Aggregate modifiers can be placed either after the aggregate (as shown
-in the example above) or interspersed with the aggregate elements:
+in the examples above) or interspersed with the aggregate elements:
 
 | Alternative 1 | Alternative 2 | Alternative 3 |
 | ------------- | ------------- | ------------- |
