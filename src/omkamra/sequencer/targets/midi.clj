@@ -212,6 +212,13 @@
   (when (string? form)
     (compile-string form)))
 
+(defmethod compile-pattern-expr :bank
+  [[_ bank]]
+  (pfn [pattern {:keys [target channel] :as bindings}]
+    (assert target "target is unbound")
+    (-> pattern
+        (sequencer/add-callback #(MidiDevice/bank-select target channel bank)))))
+
 (defmethod compile-pattern-expr :program
   [[_ program]]
   (pfn [pattern {:keys [target channel] :as bindings}]
@@ -278,6 +285,18 @@
 (defmethod compile-pattern-expr :degree
   [[_ degree]]
   (compile-note :degree degree degree->key))
+
+(defmethod compile-pattern-expr :cc
+  [[_ ctrl value]]
+  (pfn [pattern {:keys [target channel] :as bindings}]
+    (assert target "target is unbound")
+    (sequencer/add-callback pattern #(MidiDevice/cc target channel ctrl value))))
+
+(defmethod compile-pattern-expr :pitch-bend
+  [[_ value]]
+  (pfn [pattern {:keys [target channel] :as bindings}]
+    (assert target "target is unbound")
+    (sequencer/add-callback pattern #(MidiDevice/pitch-bend target channel value))))
 
 (defmethod compile-pattern-expr :all-notes-off
   [[_]]
