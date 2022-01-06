@@ -1,10 +1,24 @@
 # Change Log
 
-## [Unreleased]
+## [0.4.0] - 2022-01-06
 
 ### Added
 
-- new pattern expressions: `:bank`, `:cc`, `:pitch-bend`
+- MidiDevice protocol methods: `aftertouch`, `channel-pressure`
+- new pattern expressions: `:cc`, `:bank`, `:mod-wheel`, `:volume`,
+  `:balance`, `:pan`, `:channel-pressure`, `:pitch-bend`
+- new string syntax: `b5` -> `[:bank 5]`
+
+### Removed
+
+- the following MidiDevice protocol methods (these are now implemented
+  via `:cc`): `bank-select`, `all-notes-off`, `all-sounds-off`
+
+### Changed
+
+- names of the following MidiDevice protocol methods: `cc` ->
+  `control-change`, `pitch-bend` -> `pitch-wheel`
+- bumped `omkamra.sequencer` dependency to `0.4.0`
 
 ## [0.3.0] - 2021-12-24
 

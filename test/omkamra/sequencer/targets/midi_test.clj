@@ -45,6 +45,7 @@
 
 (deftest compile-pattern-form
   (check-compile-results
+   "b2" [:bank 2]
    "p4" [:program 4]
    "m60" [:note 60]
    "c-5" [:note 60]

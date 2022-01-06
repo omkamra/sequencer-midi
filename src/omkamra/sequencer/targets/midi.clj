@@ -163,6 +163,7 @@
     (:uratio :ratio) (let [[num denom] rest]
                        (/ (if (empty? num) 1 (Integer/parseInt num))
                           (Integer/parseInt denom)))
+    :bank [:bank (postprocess (first rest))]
     :program [:program (postprocess (first rest))]
     :clear [:clear]
     :midi-note [:note (postprocess (first rest))]
@@ -211,20 +212,6 @@
   [form]
   (when (string? form)
     (compile-string form)))
-
-(defmethod compile-pattern-expr :bank
-  [[_ bank]]
-  (pfn [pattern {:keys [target channel] :as bindings}]
-    (assert target "target is unbound")
-    (-> pattern
-        (sequencer/add-callback #(MidiDevice/bank-select target channel bank)))))
-
-(defmethod compile-pattern-expr :program
-  [[_ program]]
-  (pfn [pattern {:keys [target channel] :as bindings}]
-    (assert target "target is unbound")
-    (-> pattern
-        (sequencer/add-callback #(MidiDevice/program-change target channel program)))))
 
 (defn advance
   [pattern beats tpb]
@@ -286,29 +273,87 @@
   [[_ degree]]
   (compile-note :degree degree degree->key))
 
+(defn compile-control-change
+  [ctrl value]
+  (pfn [pattern {:keys [target channel] :as bindings}]
+    (assert target "target is unbound")
+    (sequencer/add-callback pattern #(MidiDevice/control-change target channel ctrl value))))
+
+(defmethod compile-pattern-expr :control-change
+  [[_ ctrl value]]
+  (compile-control-change ctrl value))
+
 (defmethod compile-pattern-expr :cc
   [[_ ctrl value]]
-  (pfn [pattern {:keys [target channel] :as bindings}]
-    (assert target "target is unbound")
-    (sequencer/add-callback pattern #(MidiDevice/cc target channel ctrl value))))
+  (compile-control-change ctrl value))
 
-(defmethod compile-pattern-expr :pitch-bend
+(defmethod compile-pattern-expr :bank-select
   [[_ value]]
-  (pfn [pattern {:keys [target channel] :as bindings}]
-    (assert target "target is unbound")
-    (sequencer/add-callback pattern #(MidiDevice/pitch-bend target channel value))))
+  [:cc 0 value])
 
-(defmethod compile-pattern-expr :all-notes-off
-  [[_]]
-  (pfn [pattern {:keys [target channel] :as bindings}]
-    (assert target "target is unbound")
-    (sequencer/add-callback pattern #(MidiDevice/all-notes-off target channel))))
+(defmethod compile-pattern-expr :bank
+  [[_ value]]
+  [:cc 0 value])
+
+(defmethod compile-pattern-expr :mod-wheel
+  [[_ value]]
+  [:cc 1 value])
+
+(defmethod compile-pattern-expr :volume
+  [[_ value]]
+  [:cc 7 value])
+
+(defmethod compile-pattern-expr :balance
+  [[_ value]]
+  [:cc 8 value])
+
+(defmethod compile-pattern-expr :pan
+  [[_ value]]
+  [:cc 10 value])
 
 (defmethod compile-pattern-expr :all-sounds-off
   [[_]]
+  [:cc 120 0])
+
+(defmethod compile-pattern-expr :all-notes-off
+  [[_]]
+  [:cc 123 0])
+
+(defn compile-program-change
+  [program]
   (pfn [pattern {:keys [target channel] :as bindings}]
     (assert target "target is unbound")
-    (sequencer/add-callback pattern #(MidiDevice/all-sounds-off target channel))))
+    (-> pattern
+        (sequencer/add-callback #(MidiDevice/program-change target channel program)))))
+
+(defmethod compile-pattern-expr :program-change
+  [[_ program]]
+  (compile-program-change program))
+
+(defmethod compile-pattern-expr :program
+  [[_ program]]
+  (compile-program-change program))
+
+(defmethod compile-pattern-expr :channel-pressure
+  [[_ pressure]]
+  (pfn [pattern {:keys [target channel] :as bindings}]
+    (assert target "target is unbound")
+    (-> pattern
+        (sequencer/add-callback #(MidiDevice/channel-pressure target channel pressure)))))
+
+(defn compile-pitch-wheel
+  [value]
+  (pfn [pattern {:keys [target channel] :as bindings}]
+    (assert target "target is unbound")
+    (sequencer/add-callback pattern #(MidiDevice/pitch-wheel target channel value))))
+
+(defmethod compile-pattern-expr :pitch-wheel
+  [[_ value]]
+  (compile-pitch-wheel value))
+
+(defmethod compile-pattern-expr :pitch-bend
+  [[_ value]]
+  (compile-pitch-wheel value))
 
 (defmulti compile-bind-expr
   (fn [k expr]

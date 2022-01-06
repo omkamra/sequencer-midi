@@ -8,10 +8,11 @@ ratio = #"[+-]?[0-9]*" <"/"> #"[0-9]+"
 <unum> = uratio / uint
 <num> = ratio / int
 
+bank = <"b"> uint
 program = <"p"> uint
 clear = <"---">
 
-<command> = program | clear
+<command> = bank | program | clear
 
 midi-note = <#"[mM]"> uint
 nao = #"[cdefgabCDEFGAB][-#][0-9]"

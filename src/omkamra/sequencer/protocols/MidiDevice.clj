@@ -1,11 +1,10 @@
 (ns omkamra.sequencer.protocols.MidiDevice)
 
 (defprotocol protocol
-  (note-on [this channel key vel])
   (note-off [this channel key])
-  (cc [this channel ctrl value])
-  (pitch-bend [this channel value])
+  (note-on [this channel key vel])
+  (aftertouch [this channel key pressure])
+  (control-change [this channel ctrl value])
   (program-change [this channel program])
-  (bank-select [this channel bank])
-  (all-notes-off [this channel])
-  (all-sounds-off [this channel]))
+  (channel-pressure [this channel pressure])
+  (pitch-wheel [this channel value]))

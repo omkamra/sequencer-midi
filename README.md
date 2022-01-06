@@ -13,8 +13,9 @@ interface with actual MIDI devices.
 It provides the following features:
 
 - a dictionary of scales: `:chroma`, `:major`, `:minor`, etc.
-- MIDI-specific pattern expressions: `:note`, `:degree`, `:program`,
-  `:all-notes-off`, `:all-sounds-off`
+- MIDI-specific pattern expressions: `:note`, `:degree`, `:bank`,
+  `:program`, `:cc`, `:channel-pressure`, `:pitch-bend`, `:mod-wheel`,
+  `:volume`, `:balance`, `:pan`, `:all-sounds-off`, `:all-notes-off`
 - MIDI-specific bind expressions: `:degree->key`
 - MIDI-specific binding keys: `:channel`, `:root`, `:scale`, `:vel`,
   `:oct`, `:mode`, `:semi`, `:dur`
@@ -65,6 +66,7 @@ The language provides the following building blocks:
 
 | Example input | Resulting pattern expression | Effect |
 | ------| -------------------------- | ------ |
+| `b2`  | `[:bank 2]` | set bank of current channel to 2 |
 | `p4`  | `[:program 4]` | set program of current channel to 4 |
 | `m60` | `[:note 60]` | play MIDI note 60 |
 | `c-5` | `[:note 60]` | play MIDI note 60 |
